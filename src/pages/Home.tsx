@@ -65,11 +65,9 @@ export default function Home({
     FeaturedProperty[]
   >([]);
 
-  const [featuredLoading, setFeaturedLoading] =
-    useState(true);
+  const [featuredLoading, setFeaturedLoading] = useState(true);
 
-  const [mobileMenuOpen, setMobileMenuOpen] =
-    useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     loadFeaturedProperties();
@@ -102,72 +100,47 @@ export default function Home({
       .limit(6);
 
     if (error) {
-      console.error(
-        "Featured properties error:",
-        error
-      );
+      console.error("Featured properties error:", error);
 
       setFeaturedLoading(false);
       return;
     }
 
-    setFeaturedProperties(
-      (data || []) as FeaturedProperty[]
-    );
-
+    setFeaturedProperties((data || []) as FeaturedProperty[]);
     setFeaturedLoading(false);
   };
 
-  const getFeaturedEstateName = (
-    property: FeaturedProperty
-  ) => {
+  const getFeaturedEstateName = (property: FeaturedProperty) => {
     if (!property.estates) {
       return "Zertop Limited";
     }
 
     if (Array.isArray(property.estates)) {
-      return (
-        property.estates[0]?.name ||
-        "Zertop Limited"
-      );
+      return property.estates[0]?.name || "Zertop Limited";
     }
 
     return property.estates.name;
   };
 
-  const getFeaturedImage = (
-    property: FeaturedProperty
-  ) => {
-    const images =
-      property.property_images || [];
+  const getFeaturedImage = (property: FeaturedProperty) => {
+    const images = property.property_images || [];
 
     return (
-      images.find(
-        (image) => image.is_primary
-      )?.image_url ||
+      images.find((image) => image.is_primary)?.image_url ||
       images[0]?.image_url ||
       null
     );
   };
 
-  const getFeaturedLocation = (
-    property: FeaturedProperty
-  ) => {
+  const getFeaturedLocation = (property: FeaturedProperty) => {
     return (
-      [
-        property.location,
-        property.city,
-        property.state,
-      ]
+      [property.location, property.city, property.state]
         .filter(Boolean)
-        .join(", ") ||
-      "Location available on request"
+        .join(", ") || "Location available on request"
     );
   };
 
-  const getListingLabel = (
-    listingType: string
-  ) => {
+  const getListingLabel = (listingType: string) => {
     if (listingType === "sale") {
       return "For Sale";
     }
@@ -184,10 +157,10 @@ export default function Home({
   };
 
   return (
-    <div className="min-h-screen bg-[#080808] text-white">
+    <div className="min-h-screen bg-white text-[#0b1b35]">
       {/* NAVBAR */}
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#080808]/95 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-6">
+      <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 shadow-sm backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 md:px-6">
           {/* LOGO */}
           <button
             type="button"
@@ -202,7 +175,7 @@ export default function Home({
             <img
               src="/zertop-logo.png"
               alt="Zertop Limited"
-              className="h-11 w-auto object-contain md:h-12"
+              className="h-12 w-auto object-contain md:h-14"
             />
           </button>
 
@@ -210,49 +183,54 @@ export default function Home({
           <nav className="hidden items-center gap-7 lg:flex">
             <a
               href="#home"
-              className="text-sm font-medium text-white"
+              className="text-sm font-semibold text-[#0b1b35]"
             >
               Home
             </a>
 
             <button
+              type="button"
               onClick={onBrowseProperties}
-              className="text-sm text-white/70 transition hover:text-[#f59e0b]"
+              className="text-sm font-medium text-gray-600 transition hover:text-[#f97316]"
             >
               Properties
             </button>
 
             <button
+              type="button"
               onClick={onDevelopments}
-              className="text-sm text-white/70 transition hover:text-[#f59e0b]"
+              className="text-sm font-medium text-gray-600 transition hover:text-[#f97316]"
             >
               Developments
             </button>
 
             <a
               href="#why-zertop"
-              className="text-sm text-white/70 transition hover:text-[#f59e0b]"
+              className="text-sm font-medium text-gray-600 transition hover:text-[#f97316]"
             >
               Why Zertop
             </a>
 
             <button
+              type="button"
               onClick={onAbout}
-              className="text-sm text-white/70 transition hover:text-[#f59e0b]"
+              className="text-sm font-medium text-gray-600 transition hover:text-[#f97316]"
             >
               About
             </button>
 
             <button
+              type="button"
               onClick={onContact}
-              className="text-sm text-white/70 transition hover:text-[#f59e0b]"
+              className="text-sm font-medium text-gray-600 transition hover:text-[#f97316]"
             >
               Contact
             </button>
 
             <button
+              type="button"
               onClick={onStaffLogin}
-              className="rounded-lg border border-white/15 px-4 py-2 text-sm font-semibold text-white/80 transition hover:border-[#f59e0b] hover:text-[#f59e0b]"
+              className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm font-semibold text-[#0b1b35] transition hover:border-[#f59e0b]/50 hover:bg-orange-50"
             >
               Staff Login
             </button>
@@ -262,80 +240,85 @@ export default function Home({
           <button
             type="button"
             onClick={() =>
-              setMobileMenuOpen(
-                (current) => !current
-              )
+              setMobileMenuOpen((current) => !current)
             }
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/5 lg:hidden"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-gray-200 bg-gray-50 text-[#0b1b35] lg:hidden"
           >
-            {mobileMenuOpen ? (
-              <X size={20} />
-            ) : (
-              <Menu size={20} />
-            )}
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
 
         {/* MOBILE MENU */}
         {mobileMenuOpen && (
-          <div className="border-t border-white/10 bg-[#0b0b0b] px-5 py-5 lg:hidden">
+          <div className="border-t border-gray-200 bg-white px-5 py-5 shadow-lg lg:hidden">
             <div className="flex flex-col gap-1">
               <a
                 href="#home"
-                onClick={() =>
-                  setMobileMenuOpen(false)
-                }
-                className="rounded-lg px-3 py-3 text-sm text-white"
+                onClick={() => setMobileMenuOpen(false)}
+                className="rounded-xl px-4 py-3 text-sm font-semibold text-[#0b1b35] hover:bg-orange-50"
               >
                 Home
               </a>
 
               <button
+                type="button"
                 onClick={() => {
                   setMobileMenuOpen(false);
                   onBrowseProperties();
                 }}
-                className="rounded-lg px-3 py-3 text-left text-sm text-white/70"
+                className="rounded-xl px-4 py-3 text-left text-sm font-medium text-gray-600 hover:bg-orange-50 hover:text-[#f97316]"
               >
                 Properties
               </button>
 
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onDevelopments();
+                }}
+                className="rounded-xl px-4 py-3 text-left text-sm font-medium text-gray-600 hover:bg-orange-50 hover:text-[#f97316]"
+              >
+                Developments
+              </button>
+
               <a
                 href="#why-zertop"
-                onClick={() =>
-                  setMobileMenuOpen(false)
-                }
-                className="rounded-lg px-3 py-3 text-sm text-white/70"
+                onClick={() => setMobileMenuOpen(false)}
+                className="rounded-xl px-4 py-3 text-sm font-medium text-gray-600 hover:bg-orange-50 hover:text-[#f97316]"
               >
                 Why Zertop
               </a>
 
-              <a
-                href="#about"
-                onClick={() =>
-                  setMobileMenuOpen(false)
-                }
-                className="rounded-lg px-3 py-3 text-sm text-white/70"
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onAbout();
+                }}
+                className="rounded-xl px-4 py-3 text-left text-sm font-medium text-gray-600 hover:bg-orange-50 hover:text-[#f97316]"
               >
                 About
-              </a>
-
-              <a
-                href="#contact"
-                onClick={() =>
-                  setMobileMenuOpen(false)
-                }
-                className="rounded-lg px-3 py-3 text-sm text-white/70"
-              >
-                Contact
-              </a>
+              </button>
 
               <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onContact();
+                }}
+                className="rounded-xl px-4 py-3 text-left text-sm font-medium text-gray-600 hover:bg-orange-50 hover:text-[#f97316]"
+              >
+                Contact
+              </button>
+
+              <button
+                type="button"
                 onClick={() => {
                   setMobileMenuOpen(false);
                   onStaffLogin();
                 }}
-                className="mt-3 rounded-lg border border-[#f59e0b]/50 px-4 py-3 text-sm font-semibold text-[#f59e0b]"
+                className="mt-3 rounded-xl bg-[#0b1b35] px-4 py-3 text-sm font-semibold text-white"
               >
                 Staff Login
               </button>
@@ -347,42 +330,41 @@ export default function Home({
       {/* HERO */}
       <section
         id="home"
-        className="relative overflow-hidden border-b border-white/10"
+        className="relative overflow-hidden border-b border-gray-200 bg-[#fffaf5]"
       >
-        {/* GLOW */}
-        <div className="pointer-events-none absolute -left-32 top-20 h-96 w-96 rounded-full bg-[#f59e0b]/10 blur-[120px]" />
+        {/* DECORATIVE LIGHT BACKGROUND */}
+        <div className="pointer-events-none absolute -left-40 top-24 h-96 w-96 rounded-full bg-yellow-100/70 blur-[100px]" />
 
-        <div className="pointer-events-none absolute right-0 top-0 h-[500px] w-[500px] rounded-full bg-[#dc2626]/10 blur-[140px]" />
+        <div className="pointer-events-none absolute -right-32 top-0 h-[500px] w-[500px] rounded-full bg-red-100/60 blur-[120px]" />
 
-        {/* TOP ACCENT */}
-        <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-[#f59e0b] via-[#f97316] to-[#dc2626]" />
+        <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-[#f5a400] via-[#f97316] to-[#ef233c]" />
 
-        <div className="mx-auto grid min-h-[690px] max-w-7xl items-center gap-14 px-5 py-20 md:px-6 lg:grid-cols-2">
+        <div className="relative mx-auto grid min-h-[680px] max-w-7xl items-center gap-14 px-5 py-16 md:px-6 md:py-20 lg:grid-cols-2">
           {/* HERO CONTENT */}
           <div className="relative z-10">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#f59e0b]/25 bg-[#f59e0b]/10 px-4 py-2 text-sm font-medium text-[#f59e0b]">
+            <div className="inline-flex items-center gap-2 rounded-full border border-orange-200 bg-white px-4 py-2 text-sm font-semibold text-[#f97316] shadow-sm">
               <BadgeCheck size={16} />
               Real estate opportunities built for growth
             </div>
 
-            <h1 className="mt-7 max-w-3xl text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
+            <h1 className="mt-7 max-w-3xl text-4xl font-black leading-[1.05] tracking-tight text-[#0b1b35] sm:text-5xl md:text-6xl">
               Find property that builds your{" "}
-              <span className="bg-gradient-to-r from-[#f59e0b] via-[#f97316] to-[#dc2626] bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[#f5a400] via-[#f97316] to-[#ef233c] bg-clip-text text-transparent">
                 future.
               </span>
             </h1>
 
-            <p className="mt-6 max-w-xl text-base leading-8 text-white/55 md:text-lg">
-              Explore residential properties, land
-              opportunities and investment developments
-              from Zertop Limited in strategic and
-              growing locations.
+            <p className="mt-6 max-w-xl text-base leading-8 text-gray-600 md:text-lg">
+              Explore residential properties, land opportunities and
+              investment developments from Zertop Limited in strategic
+              and growing locations.
             </p>
 
             <div className="mt-9 flex flex-wrap gap-4">
               <button
+                type="button"
                 onClick={onBrowseProperties}
-                className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#f59e0b] via-[#f97316] to-[#dc2626] px-6 py-3.5 font-bold text-white shadow-[0_12px_40px_rgba(249,115,22,0.18)] transition hover:brightness-110"
+                className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#f5a400] via-[#f97316] to-[#ef233c] px-6 py-3.5 font-bold text-white shadow-lg shadow-orange-200/70 transition hover:-translate-y-0.5"
               >
                 Browse Properties
 
@@ -395,41 +377,41 @@ export default function Home({
               <button
                 type="button"
                 onClick={onContact}
-                className="flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.03] px-6 py-3.5 font-semibold text-white/80 transition hover:border-white/30 hover:bg-white/[0.06]"
+                className="flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-6 py-3.5 font-semibold text-[#0b1b35] shadow-sm transition hover:border-orange-300 hover:bg-orange-50"
               >
-              <MessageCircle size={18} />
+                <MessageCircle size={18} />
                 Make an Enquiry
               </button>
             </div>
 
             {/* HERO POINTS */}
-            <div className="mt-12 grid max-w-xl grid-cols-3 gap-4 border-t border-white/10 pt-7">
+            <div className="mt-12 grid max-w-xl grid-cols-3 gap-4 border-t border-gray-200 pt-7">
               <div>
-                <p className="text-lg font-bold md:text-2xl">
+                <p className="text-lg font-black text-[#0b1b35] md:text-2xl">
                   Quality
                 </p>
 
-                <p className="mt-1 text-xs text-white/40 md:text-sm">
+                <p className="mt-1 text-xs text-gray-500 md:text-sm">
                   Property options
                 </p>
               </div>
 
               <div>
-                <p className="text-lg font-bold md:text-2xl">
+                <p className="text-lg font-black text-[#0b1b35] md:text-2xl">
                   Flexible
                 </p>
 
-                <p className="mt-1 text-xs text-white/40 md:text-sm">
+                <p className="mt-1 text-xs text-gray-500 md:text-sm">
                   Payment plans
                 </p>
               </div>
 
               <div>
-                <p className="text-lg font-bold md:text-2xl">
+                <p className="text-lg font-black text-[#0b1b35] md:text-2xl">
                   Trusted
                 </p>
 
-                <p className="mt-1 text-xs text-white/40 md:text-sm">
+                <p className="mt-1 text-xs text-gray-500 md:text-sm">
                   Buying process
                 </p>
               </div>
@@ -438,34 +420,41 @@ export default function Home({
 
           {/* HERO CARD */}
           <div className="relative z-10">
-            <div className="absolute -inset-1 rounded-[28px] bg-gradient-to-br from-[#f59e0b]/40 via-transparent to-[#dc2626]/30 blur-xl" />
+            <div className="absolute -left-6 -top-6 h-32 w-32 rounded-[30px] bg-yellow-200/50" />
 
-            <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[#111111] p-3 shadow-2xl">
-              <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#090909] p-7">
-                {/* DECORATIVE LINES */}
-                <div className="absolute right-[-60px] top-[-45px] h-28 w-48 rotate-[-35deg] bg-gradient-to-r from-[#f59e0b] to-[#f97316] opacity-80" />
+            <div className="absolute -bottom-7 -right-7 h-40 w-40 rounded-[36px] bg-red-100/70" />
 
-                <div className="absolute right-[-80px] top-[75px] h-20 w-48 rotate-[-35deg] bg-[#dc2626] opacity-70" />
+            <div className="relative overflow-hidden rounded-[30px] border border-gray-200 bg-white p-4 shadow-[0_30px_80px_rgba(15,23,42,0.12)]">
+              <div className="relative overflow-hidden rounded-[24px] bg-[#fff7ed] p-7 md:p-9">
+                {/* DECORATION */}
+                <div className="absolute -right-16 -top-12 h-28 w-52 rotate-[-35deg] bg-[#f5a400]/30" />
+
+                <div className="absolute -right-20 top-24 h-20 w-52 rotate-[-35deg] bg-[#ef233c]/20" />
 
                 <div className="relative z-10">
-                  <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#f59e0b]">
+                  <img
+                    src="/zertop-logo.png"
+                    alt="Zertop Limited"
+                    className="h-16 w-auto object-contain"
+                  />
+
+                  <p className="mt-8 text-xs font-bold uppercase tracking-[0.18em] text-[#f97316]">
                     Zertop Properties
                   </p>
 
-                  <h2 className="mt-4 max-w-md text-3xl font-bold">
-                    Your next property may be one click
-                    away.
+                  <h2 className="mt-3 max-w-md text-3xl font-black leading-tight text-[#0b1b35]">
+                    Your next property may be one click away.
                   </h2>
 
-                  <p className="mt-4 max-w-md leading-7 text-white/50">
-                    Browse live listings, compare
-                    locations, review payment options and
-                    contact our team directly.
+                  <p className="mt-4 max-w-md leading-7 text-gray-600">
+                    Browse live listings, compare locations, review
+                    payment options and contact our team directly.
                   </p>
 
                   <button
+                    type="button"
                     onClick={onBrowseProperties}
-                    className="mt-7 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#f59e0b] via-[#f97316] to-[#dc2626] px-5 py-3.5 font-bold transition hover:brightness-110"
+                    className="mt-7 flex w-full items-center justify-center gap-2 rounded-xl bg-[#0b1b35] px-5 py-3.5 font-bold text-white transition hover:bg-[#f97316]"
                   >
                     <Search size={18} />
                     Explore Available Properties
@@ -473,36 +462,35 @@ export default function Home({
                 </div>
               </div>
 
-              <div className="grid gap-3 p-3 sm:grid-cols-2">
-                <div className="rounded-2xl border border-white/10 bg-[#0b0b0b] p-5">
+              <div className="grid gap-3 p-2 pt-4 sm:grid-cols-2">
+                <div className="rounded-2xl border border-gray-200 bg-white p-5">
                   <MapPin
-                    className="text-[#f59e0b]"
+                    className="text-[#f5a400]"
                     size={24}
                   />
 
-                  <h3 className="mt-4 font-semibold">
+                  <h3 className="mt-4 font-bold text-[#0b1b35]">
                     Strategic Locations
                   </h3>
 
-                  <p className="mt-2 text-sm leading-6 text-white/40">
-                    Properties positioned around
-                    emerging growth corridors.
+                  <p className="mt-2 text-sm leading-6 text-gray-500">
+                    Properties positioned around emerging growth
+                    corridors.
                   </p>
                 </div>
 
-                <div className="rounded-2xl border border-white/10 bg-[#0b0b0b] p-5">
+                <div className="rounded-2xl border border-gray-200 bg-white p-5">
                   <ShieldCheck
-                    className="text-[#dc2626]"
+                    className="text-[#ef233c]"
                     size={24}
                   />
 
-                  <h3 className="mt-4 font-semibold">
+                  <h3 className="mt-4 font-bold text-[#0b1b35]">
                     Guided Process
                   </h3>
 
-                  <p className="mt-2 text-sm leading-6 text-white/40">
-                    From enquiry to inspection and
-                    acquisition.
+                  <p className="mt-2 text-sm leading-6 text-gray-500">
+                    From enquiry to inspection and acquisition.
                   </p>
                 </div>
               </div>
@@ -512,31 +500,31 @@ export default function Home({
       </section>
 
       {/* FEATURED PROPERTIES */}
-      <section className="relative border-b border-white/10 bg-[#0b0b0b]">
+      <section className="border-b border-gray-200 bg-white">
         <div className="mx-auto max-w-7xl px-5 py-20 md:px-6">
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <div className="max-w-2xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#f59e0b]">
+              <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#f97316]">
                 Featured Properties
               </p>
 
-              <h2 className="mt-4 text-3xl font-bold md:text-4xl">
+              <h2 className="mt-4 text-3xl font-black text-[#0b1b35] md:text-4xl">
                 Explore our latest property{" "}
                 <span className="text-[#f97316]">
                   opportunities.
                 </span>
               </h2>
 
-              <p className="mt-4 leading-7 text-white/45">
-                Browse some of our currently available
-                properties and find an opportunity that
-                matches your plans.
+              <p className="mt-4 leading-7 text-gray-600">
+                Browse some of our currently available properties and
+                find an opportunity that matches your plans.
               </p>
             </div>
 
             <button
+              type="button"
               onClick={onBrowseProperties}
-              className="group flex items-center gap-2 text-sm font-bold text-[#f59e0b]"
+              className="group flex items-center gap-2 text-sm font-bold text-[#f97316]"
             >
               View All Properties
 
@@ -548,140 +536,121 @@ export default function Home({
           </div>
 
           {featuredLoading ? (
-            <div className="py-16 text-center text-white/35">
+            <div className="py-16 text-center text-gray-400">
               Loading featured properties...
             </div>
           ) : featuredProperties.length === 0 ? (
-            <div className="mt-10 rounded-2xl border border-white/10 bg-[#111111] p-10 text-center">
+            <div className="mt-10 rounded-3xl border border-gray-200 bg-gray-50 p-10 text-center">
               <Building2
-                className="mx-auto text-white/20"
+                className="mx-auto text-gray-300"
                 size={38}
               />
 
-              <h3 className="mt-4 text-lg font-semibold">
+              <h3 className="mt-4 text-lg font-bold text-[#0b1b35]">
                 Properties coming soon
               </h3>
 
-              <p className="mt-2 text-sm text-white/35">
+              <p className="mt-2 text-sm text-gray-500">
                 New Zertop listings will appear here.
               </p>
             </div>
           ) : (
             <div className="mt-10 grid gap-7 md:grid-cols-2 lg:grid-cols-3">
-              {featuredProperties.map(
-                (property) => {
-                  const image =
-                    getFeaturedImage(property);
+              {featuredProperties.map((property) => {
+                const image = getFeaturedImage(property);
 
-                  return (
-                    <article
-                      key={property.id}
-                      className="group overflow-hidden rounded-2xl border border-white/10 bg-[#111111] shadow-[0_20px_60px_rgba(0,0,0,0.3)] transition duration-300 hover:-translate-y-1 hover:border-[#f59e0b]/40"
-                    >
-                      <div className="relative overflow-hidden">
-                        {image ? (
-                          <img
-                            src={image}
-                            alt={property.title}
-                            className="aspect-[16/10] w-full object-cover transition duration-500 group-hover:scale-105"
-                          />
-                        ) : (
-                          <div className="flex aspect-[16/10] items-center justify-center bg-[#181818] text-sm text-white/30">
-                            Property Image Coming Soon
-                          </div>
-                        )}
+                return (
+                  <article
+                    key={property.id}
+                    className="group overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-orange-200 hover:shadow-xl"
+                  >
+                    <div className="relative overflow-hidden bg-gray-100">
+                      {image ? (
+                        <img
+                          src={image}
+                          alt={property.title}
+                          className="aspect-[16/10] w-full object-cover transition duration-500 group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="flex aspect-[16/10] items-center justify-center bg-gray-100 text-sm text-gray-400">
+                          Property Image Coming Soon
+                        </div>
+                      )}
 
-                        {/* IMAGE OVERLAY */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                      <span className="absolute left-4 top-4 rounded-full bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-[#ef233c] shadow-lg">
+                        {getListingLabel(property.listing_type)}
+                      </span>
+                    </div>
 
-                        <span className="absolute left-4 top-4 rounded-full bg-gradient-to-r from-[#f59e0b] to-[#dc2626] px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-white shadow-lg">
-                          {getListingLabel(
-                            property.listing_type
-                          )}
+                    <div className="p-6">
+                      <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#f97316]">
+                        {property.property_type}
+                      </p>
+
+                      <h3 className="mt-2 line-clamp-2 text-xl font-black text-[#0b1b35]">
+                        {property.title}
+                      </h3>
+
+                      <p className="mt-3 text-sm font-semibold text-gray-600">
+                        {getFeaturedEstateName(property)}
+                      </p>
+
+                      <div className="mt-3 flex items-start gap-2 text-sm text-gray-500">
+                        <MapPin
+                          size={16}
+                          className="mt-0.5 shrink-0 text-[#f97316]"
+                        />
+
+                        <span>
+                          {getFeaturedLocation(property)}
                         </span>
                       </div>
 
-                      <div className="p-5">
-                        <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#f59e0b]">
-                          {property.property_type}
+                      <div className="mt-5 border-t border-gray-100 pt-5">
+                        <p className="text-xs uppercase tracking-wide text-gray-400">
+                          Price
                         </p>
 
-                        <h3 className="mt-2 line-clamp-2 text-xl font-bold">
-                          {property.title}
-                        </h3>
-
-                        <p className="mt-3 text-sm font-medium text-white/60">
-                          {getFeaturedEstateName(
-                            property
-                          )}
+                        <p className="mt-1 text-2xl font-black text-[#0b1b35]">
+                          ₦{Number(property.price).toLocaleString()}
                         </p>
-
-                        <div className="mt-3 flex items-start gap-2 text-sm text-white/40">
-                          <MapPin
-                            size={16}
-                            className="mt-0.5 shrink-0 text-[#f97316]"
-                          />
-
-                          <span>
-                            {getFeaturedLocation(
-                              property
-                            )}
-                          </span>
-                        </div>
-
-                        <div className="mt-5 border-t border-white/10 pt-5">
-                          <p className="text-xs uppercase tracking-wide text-white/35">
-                            Price
-                          </p>
-
-                          <p className="mt-1 text-2xl font-bold">
-                            ₦
-                            {Number(
-                              property.price
-                            ).toLocaleString()}
-                          </p>
-                        </div>
-
-                        <button
-                          onClick={() =>
-                            onViewProperty(
-                              property.id
-                            )
-                          }
-                          className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#f59e0b] via-[#f97316] to-[#dc2626] py-3.5 font-bold transition hover:brightness-110"
-                        >
-                          View Property
-                          <ArrowRight size={17} />
-                        </button>
                       </div>
-                    </article>
-                  );
-                }
-              )}
+
+                      <button
+                        type="button"
+                        onClick={() => onViewProperty(property.id)}
+                        className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-[#0b1b35] py-3.5 font-bold text-white transition hover:bg-[#f97316]"
+                      >
+                        View Property
+                        <ArrowRight size={17} />
+                      </button>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           )}
         </div>
       </section>
 
       {/* PROPERTY TYPES */}
-      <section className="bg-[#080808]">
+      <section className="bg-[#f8fafc]">
         <div className="mx-auto max-w-7xl px-5 py-20 md:px-6">
           <div className="max-w-2xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#f59e0b]">
+            <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#f97316]">
               Find What Fits You
             </p>
 
-            <h2 className="mt-4 text-3xl font-bold md:text-4xl">
+            <h2 className="mt-4 text-3xl font-black text-[#0b1b35] md:text-4xl">
               Property opportunities for different{" "}
               <span className="text-[#f97316]">
                 goals.
               </span>
             </h2>
 
-            <p className="mt-4 leading-7 text-white/45">
-              Whether you want a home, land or an
-              investment opportunity, explore available
-              Zertop listings.
+            <p className="mt-4 leading-7 text-gray-600">
+              Whether you want a home, land or an investment
+              opportunity, explore available Zertop listings.
             </p>
           </div>
 
@@ -714,28 +683,27 @@ export default function Home({
               return (
                 <div
                   key={item.title}
-                  className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#111111] p-7 transition hover:border-[#f59e0b]/40"
+                  className="group rounded-3xl border border-gray-200 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:border-orange-200 hover:shadow-lg"
                 >
-                  <div className="absolute right-[-45px] top-[-45px] h-28 w-28 rounded-full bg-[#f59e0b]/5 blur-2xl" />
-
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#f59e0b]/20 to-[#dc2626]/10">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50">
                     <Icon
-                      className="text-[#f59e0b]"
+                      className="text-[#f97316]"
                       size={25}
                     />
                   </div>
 
-                  <h3 className="mt-5 text-xl font-semibold">
+                  <h3 className="mt-5 text-xl font-bold text-[#0b1b35]">
                     {item.title}
                   </h3>
 
-                  <p className="mt-3 leading-7 text-white/45">
+                  <p className="mt-3 leading-7 text-gray-600">
                     {item.description}
                   </p>
 
                   <button
+                    type="button"
                     onClick={onBrowseProperties}
-                    className="mt-6 flex items-center gap-2 text-sm font-bold text-[#f59e0b]"
+                    className="mt-6 flex items-center gap-2 text-sm font-bold text-[#f97316]"
                   >
                     {item.action}
                     <ArrowRight size={16} />
@@ -750,33 +718,33 @@ export default function Home({
       {/* WHY ZERTOP */}
       <section
         id="why-zertop"
-        className="relative overflow-hidden border-y border-white/10 bg-[#0d0d0d]"
+        className="relative overflow-hidden border-y border-gray-200 bg-white"
       >
-        <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-[#dc2626]/5 blur-[100px]" />
+        <div className="absolute -right-40 bottom-0 h-96 w-96 rounded-full bg-red-50 blur-[100px]" />
 
         <div className="relative mx-auto grid max-w-7xl gap-12 px-5 py-20 md:px-6 lg:grid-cols-2">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#f59e0b]">
+            <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#f97316]">
               Why Zertop
             </p>
 
-            <h2 className="mt-4 text-3xl font-bold md:text-4xl">
+            <h2 className="mt-4 text-3xl font-black text-[#0b1b35] md:text-4xl">
               A simpler way to discover and{" "}
-              <span className="bg-gradient-to-r from-[#f59e0b] to-[#dc2626] bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[#f5a400] to-[#ef233c] bg-clip-text text-transparent">
                 secure property.
               </span>
             </h2>
 
-            <p className="mt-5 max-w-xl leading-8 text-white/45">
-              We make it easier for prospective buyers
-              and investors to explore opportunities,
-              ask questions and arrange property
-              inspections.
+            <p className="mt-5 max-w-xl leading-8 text-gray-600">
+              We make it easier for prospective buyers and investors
+              to explore opportunities, ask questions and arrange
+              property inspections.
             </p>
 
             <button
+              type="button"
               onClick={onBrowseProperties}
-              className="mt-8 flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#f59e0b] via-[#f97316] to-[#dc2626] px-6 py-3.5 font-bold transition hover:brightness-110"
+              className="mt-8 flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#f5a400] via-[#f97316] to-[#ef233c] px-6 py-3.5 font-bold text-white shadow-lg shadow-orange-100"
             >
               Find a Property
               <ArrowRight size={18} />
@@ -784,75 +752,51 @@ export default function Home({
           </div>
 
           <div className="grid gap-4">
-            <div className="flex gap-4 rounded-2xl border border-white/10 bg-[#080808] p-6">
-              <CheckCircle2
-                className="mt-1 shrink-0 text-[#f59e0b]"
-                size={24}
-              />
+            <ReasonRow
+              icon={
+                <CheckCircle2
+                  className="text-[#f5a400]"
+                  size={24}
+                />
+              }
+              title="Clear Property Information"
+              text="Review important property details, location and pricing before making an enquiry."
+            />
 
-              <div>
-                <h3 className="font-semibold">
-                  Clear Property Information
-                </h3>
+            <ReasonRow
+              icon={
+                <Clock3
+                  className="text-[#f97316]"
+                  size={24}
+                />
+              }
+              title="Inspection Booking"
+              text="Express your interest and request a property inspection directly from the website."
+            />
 
-                <p className="mt-2 text-sm leading-6 text-white/45">
-                  Review important property details,
-                  location and pricing before making an
-                  enquiry.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex gap-4 rounded-2xl border border-white/10 bg-[#080808] p-6">
-              <Clock3
-                className="mt-1 shrink-0 text-[#f97316]"
-                size={24}
-              />
-
-              <div>
-                <h3 className="font-semibold">
-                  Inspection Booking
-                </h3>
-
-                <p className="mt-2 text-sm leading-6 text-white/45">
-                  Express your interest and request a
-                  property inspection directly from the
-                  website.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex gap-4 rounded-2xl border border-white/10 bg-[#080808] p-6">
-              <ShieldCheck
-                className="mt-1 shrink-0 text-[#dc2626]"
-                size={24}
-              />
-
-              <div>
-                <h3 className="font-semibold">
-                  Professional Support
-                </h3>
-
-                <p className="mt-2 text-sm leading-6 text-white/45">
-                  Get assistance through your enquiry,
-                  inspection and property acquisition
-                  journey.
-                </p>
-              </div>
-            </div>
+            <ReasonRow
+              icon={
+                <ShieldCheck
+                  className="text-[#ef233c]"
+                  size={24}
+                />
+              }
+              title="Professional Support"
+              text="Get assistance through your enquiry, inspection and property acquisition journey."
+            />
           </div>
         </div>
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="bg-[#080808]">
+      <section className="bg-[#f8fafc]">
         <div className="mx-auto max-w-7xl px-5 py-20 md:px-6">
           <div className="text-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#f59e0b]">
+            <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#f97316]">
               How It Works
             </p>
 
-            <h2 className="mt-4 text-3xl font-bold md:text-4xl">
+            <h2 className="mt-4 text-3xl font-black text-[#0b1b35] md:text-4xl">
               From search to{" "}
               <span className="text-[#f97316]">
                 inspection.
@@ -880,17 +824,17 @@ export default function Home({
             ].map((step) => (
               <div
                 key={step.number}
-                className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#111111] p-7"
+                className="rounded-3xl border border-gray-200 bg-white p-7 shadow-sm"
               >
-                <p className="bg-gradient-to-r from-[#f59e0b] to-[#dc2626] bg-clip-text text-5xl font-black text-transparent opacity-70">
+                <p className="bg-gradient-to-r from-[#f5a400] to-[#ef233c] bg-clip-text text-5xl font-black text-transparent">
                   {step.number}
                 </p>
 
-                <h3 className="mt-6 text-xl font-semibold">
+                <h3 className="mt-6 text-xl font-bold text-[#0b1b35]">
                   {step.title}
                 </h3>
 
-                <p className="mt-3 leading-7 text-white/45">
+                <p className="mt-3 leading-7 text-gray-600">
                   {step.text}
                 </p>
               </div>
@@ -900,116 +844,198 @@ export default function Home({
       </section>
 
       {/* ABOUT */}
-      <section
-        id="about"
-        className="relative overflow-hidden border-y border-white/10 bg-[#0d0d0d]"
-      >
-        <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-[#f59e0b] via-[#f97316] to-[#dc2626]" />
+      <section className="relative overflow-hidden border-y border-gray-200 bg-white">
+        <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-[#f5a400] via-[#f97316] to-[#ef233c]" />
 
-        <div className="mx-auto max-w-7xl px-5 py-20 md:px-6">
+        <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 py-20 md:px-6 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#f59e0b]">
+            <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#f97316]">
               About Zertop
             </p>
 
-            <h2 className="mt-4 text-3xl font-bold leading-tight md:text-5xl">
+            <h2 className="mt-4 text-3xl font-black leading-tight text-[#0b1b35] md:text-5xl">
               Building real-estate opportunities with{" "}
-              <span className="bg-gradient-to-r from-[#f59e0b] to-[#dc2626] bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[#f5a400] to-[#ef233c] bg-clip-text text-transparent">
                 vision.
               </span>
             </h2>
 
-            <p className="mt-6 leading-8 text-white/50">
-              Zertop Limited provides real-estate and
-              property development solutions for
-              individuals, families and investors. Our
-              focus is helping clients identify suitable
-              property opportunities and move through
-              the acquisition process with greater
-              clarity.
+            <p className="mt-6 leading-8 text-gray-600">
+              Zertop Limited provides real-estate and property
+              development solutions for individuals, families and
+              investors.
             </p>
 
-            <p className="mt-5 leading-8 text-white/50">
-              From property development to investment
-              opportunities and strategic locations,
-              Zertop continues to build around long-term
-              value and growth.
+            <p className="mt-5 leading-8 text-gray-600">
+              From property development to investment opportunities
+              and strategic locations, Zertop continues to build
+              around long-term value and growth.
             </p>
+
+            <button
+              type="button"
+              onClick={onAbout}
+              className="mt-7 flex items-center gap-2 font-bold text-[#f97316]"
+            >
+              Learn More About Zertop
+              <ArrowRight size={17} />
+            </button>
+          </div>
+
+          <div className="rounded-[30px] border border-gray-200 bg-[#fffaf5] p-8 shadow-sm">
+            <img
+              src="/zertop-logo.png"
+              alt="Zertop Limited"
+              className="h-20 w-auto object-contain"
+            />
+
+            <div className="mt-8 grid gap-4 sm:grid-cols-2">
+              <SmallStat
+                value="2016"
+                label="Established"
+              />
+
+              <SmallStat
+                value="Lagos"
+                label="Key Market"
+              />
+
+              <SmallStat
+                value="Epe"
+                label="Growth Corridor"
+              />
+
+              <SmallStat
+                value="Global"
+                label="Business Outlook"
+              />
+            </div>
           </div>
         </div>
       </section>
 
       {/* FINAL CTA */}
-      <section
-        id="contact"
-        className="bg-[#080808]"
-      >
+      <section className="bg-[#fff7ed]">
         <div className="mx-auto max-w-7xl px-5 py-20 md:px-6">
-          <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[#111111] p-8 md:p-12">
-            <div className="absolute right-[-100px] top-[-80px] h-64 w-64 rotate-[-35deg] bg-gradient-to-r from-[#f59e0b] to-[#f97316] opacity-10" />
-
-            <div className="absolute right-[-130px] top-[100px] h-48 w-64 rotate-[-35deg] bg-[#dc2626] opacity-10" />
+          <div className="relative overflow-hidden rounded-[30px] bg-gradient-to-r from-[#f5a400] via-[#f97316] to-[#ef233c] p-8 text-white shadow-xl md:p-12">
+            <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full border-[35px] border-white/10" />
 
             <div className="relative z-10 grid items-center gap-10 lg:grid-cols-[1fr_auto]">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#f59e0b]">
+                <p className="text-sm font-bold uppercase tracking-[0.22em] text-white/75">
                   Ready To Get Started?
                 </p>
 
-                <h2 className="mt-4 max-w-2xl text-3xl font-bold leading-tight md:text-4xl">
-                  Find a property worth taking the next
-                  step on.
+                <h2 className="mt-4 max-w-2xl text-3xl font-black leading-tight md:text-4xl">
+                  Find a property worth taking the next step on.
                 </h2>
 
-                <p className="mt-4 max-w-2xl leading-7 text-white/45">
-                  Browse available listings and contact
-                  Zertop when you find a property that
-                  interests you.
+                <p className="mt-4 max-w-2xl leading-7 text-white/85">
+                  Browse available listings and contact Zertop when
+                  you find a property that interests you.
                 </p>
               </div>
 
-              <button
-                onClick={onBrowseProperties}
-                className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#f59e0b] via-[#f97316] to-[#dc2626] px-7 py-4 font-bold transition hover:brightness-110"
-              >
-                View Available Properties
-                <ArrowRight size={18} />
-              </button>
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={onBrowseProperties}
+                  className="flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-4 font-bold text-[#ef233c] shadow-lg"
+                >
+                  View Properties
+                  <ArrowRight size={18} />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={onContact}
+                  className="rounded-xl border border-white/40 bg-white/10 px-7 py-4 font-bold text-white backdrop-blur"
+                >
+                  Contact Zertop
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-white/10 bg-[#050505]">
+      <footer className="border-t border-gray-200 bg-white">
         <div className="mx-auto max-w-7xl px-5 py-10 md:px-6">
           <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
             <div>
               <img
                 src="/zertop-logo.png"
                 alt="Zertop Limited"
-                className="h-12 w-auto object-contain"
+                className="h-14 w-auto object-contain"
               />
 
-              <p className="mt-4 max-w-md text-sm leading-6 text-white/35">
+              <p className="mt-4 max-w-md text-sm leading-6 text-gray-500">
                 Real Estate & Property Development.
                 Building opportunities around property,
                 investment and long-term value.
               </p>
             </div>
 
-            <div className="text-sm text-white/35 md:text-right">
-              <p>
-                © 2026 Zertop Limited.
-              </p>
-
-              <p className="mt-1">
-                All rights reserved.
-              </p>
+            <div className="text-sm text-gray-400 md:text-right">
+              <p>© 2026 Zertop Limited.</p>
+              <p className="mt-1">All rights reserved.</p>
             </div>
           </div>
         </div>
       </footer>
+    </div>
+  );
+}
+
+type ReasonRowProps = {
+  icon: React.ReactNode;
+  title: string;
+  text: string;
+};
+
+function ReasonRow({
+  icon,
+  title,
+  text,
+}: ReasonRowProps) {
+  return (
+    <div className="flex gap-4 rounded-2xl border border-gray-200 bg-[#f8fafc] p-6">
+      <div className="mt-1 shrink-0">
+        {icon}
+      </div>
+
+      <div>
+        <h3 className="font-bold text-[#0b1b35]">
+          {title}
+        </h3>
+
+        <p className="mt-2 text-sm leading-6 text-gray-600">
+          {text}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+type SmallStatProps = {
+  value: string;
+  label: string;
+};
+
+function SmallStat({
+  value,
+  label,
+}: SmallStatProps) {
+  return (
+    <div className="rounded-2xl border border-orange-100 bg-white p-5">
+      <p className="text-2xl font-black text-[#f97316]">
+        {value}
+      </p>
+
+      <p className="mt-1 text-sm text-gray-500">
+        {label}
+      </p>
     </div>
   );
 }

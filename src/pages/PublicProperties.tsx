@@ -137,14 +137,9 @@ export default function PublicProperties({
 
   const getPropertyLocation = (property: Property) => {
     return (
-      [
-        property.location,
-        property.city,
-        property.state,
-      ]
+      [property.location, property.city, property.state]
         .filter(Boolean)
-        .join(", ") ||
-      "Location available on request"
+        .join(", ") || "Location available on request"
     );
   };
 
@@ -186,19 +181,20 @@ export default function PublicProperties({
   });
 
   return (
-    <div className="min-h-screen bg-[#080808] text-white">
+    <div className="min-h-screen bg-white text-[#0b1b35]">
       {/* HEADER */}
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#080808]/95 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-6">
+      <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 shadow-sm backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 md:px-6">
           <img
             src="/zertop-logo.png"
             alt="Zertop Limited"
-            className="h-10 w-auto object-contain md:h-12"
+            className="h-12 w-auto object-contain md:h-14"
           />
 
           <button
+            type="button"
             onClick={onBack}
-            className="flex items-center gap-2 rounded-lg border border-white/15 bg-white/[0.03] px-4 py-2 text-sm font-medium text-white/70 transition hover:border-[#f59e0b]/50 hover:text-white"
+            className="flex items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm font-semibold text-[#0b1b35] transition hover:border-orange-300 hover:bg-orange-50"
           >
             <ArrowLeft size={17} />
             Back Home
@@ -208,50 +204,48 @@ export default function PublicProperties({
 
       <main>
         {/* HERO */}
-        <section className="relative overflow-hidden border-b border-white/10 bg-[#0d0d0d]">
-          <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-[#f59e0b] via-[#f97316] to-[#dc2626]" />
+        <section className="relative overflow-hidden border-b border-gray-200 bg-[#fffaf5]">
+          <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-[#f5a400] via-[#f97316] to-[#ef233c]" />
 
-          <div className="pointer-events-none absolute -left-20 top-10 h-72 w-72 rounded-full bg-[#f59e0b]/10 blur-[100px]" />
+          <div className="pointer-events-none absolute -left-24 top-8 h-80 w-80 rounded-full bg-yellow-100/70 blur-[100px]" />
 
-          <div className="pointer-events-none absolute right-0 top-0 h-72 w-72 rounded-full bg-[#dc2626]/10 blur-[110px]" />
+          <div className="pointer-events-none absolute -right-20 top-0 h-80 w-80 rounded-full bg-red-100/60 blur-[110px]" />
 
           <div className="relative mx-auto max-w-7xl px-5 py-16 md:px-6 md:py-20">
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#f59e0b]">
+            <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#f97316]">
               Zertop Properties
             </p>
 
-            <h1 className="mt-4 max-w-4xl text-4xl font-black leading-tight md:text-5xl lg:text-6xl">
+            <h1 className="mt-4 max-w-4xl text-4xl font-black leading-tight text-[#0b1b35] md:text-5xl lg:text-6xl">
               Find a property worth{" "}
-              <span className="bg-gradient-to-r from-[#f59e0b] via-[#f97316] to-[#dc2626] bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[#f5a400] via-[#f97316] to-[#ef233c] bg-clip-text text-transparent">
                 taking the next step on.
               </span>
             </h1>
 
-            <p className="mt-5 max-w-2xl text-base leading-8 text-white/45 md:text-lg">
-              Browse available homes, land and investment
-              opportunities from Zertop Limited.
+            <p className="mt-5 max-w-2xl text-base leading-8 text-gray-600 md:text-lg">
+              Browse available homes, land and investment opportunities
+              from Zertop Limited.
             </p>
           </div>
         </section>
 
         <section className="mx-auto max-w-7xl px-5 py-10 md:px-6">
           {/* SEARCH + FILTERS */}
-          <div className="rounded-2xl border border-white/10 bg-[#111111] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
+          <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)]">
             <div className="grid gap-4 lg:grid-cols-[1fr_220px_220px]">
               {/* SEARCH */}
-              <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-[#080808] px-4 transition focus-within:border-[#f59e0b]/60">
+              <div className="flex items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 transition focus-within:border-[#f97316] focus-within:bg-white">
                 <Search
                   size={19}
-                  className="shrink-0 text-[#f59e0b]"
+                  className="shrink-0 text-[#f97316]"
                 />
 
                 <input
                   value={search}
-                  onChange={(e) =>
-                    setSearch(e.target.value)
-                  }
+                  onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search property, estate or location..."
-                  className="w-full bg-transparent py-3.5 text-sm text-white outline-none placeholder:text-white/25"
+                  className="w-full bg-transparent py-3.5 text-sm text-[#0b1b35] outline-none placeholder:text-gray-400"
                 />
               </div>
 
@@ -259,7 +253,7 @@ export default function PublicProperties({
               <div className="relative">
                 <Filter
                   size={17}
-                  className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#f59e0b]"
+                  className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#f97316]"
                 />
 
                 <select
@@ -267,7 +261,7 @@ export default function PublicProperties({
                   onChange={(e) =>
                     setPropertyType(e.target.value)
                   }
-                  className="w-full appearance-none rounded-xl border border-white/10 bg-[#080808] py-3.5 pl-11 pr-4 text-sm text-white/70 outline-none transition focus:border-[#f59e0b]/60"
+                  className="w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 py-3.5 pl-11 pr-4 text-sm text-gray-700 outline-none transition focus:border-[#f97316] focus:bg-white"
                 >
                   <option value="all">
                     All Property Types
@@ -290,7 +284,7 @@ export default function PublicProperties({
                 onChange={(e) =>
                   setListingType(e.target.value)
                 }
-                className="w-full rounded-xl border border-white/10 bg-[#080808] px-4 py-3.5 text-sm text-white/70 outline-none transition focus:border-[#f59e0b]/60"
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3.5 text-sm text-gray-700 outline-none transition focus:border-[#f97316] focus:bg-white"
               >
                 <option value="all">
                   All Listings
@@ -315,15 +309,15 @@ export default function PublicProperties({
           {!loading && (
             <div className="mt-10 flex flex-wrap items-end justify-between gap-4">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#f59e0b]">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#f97316]">
                   Property Catalogue
                 </p>
 
-                <h2 className="mt-2 text-2xl font-bold">
+                <h2 className="mt-2 text-2xl font-black text-[#0b1b35]">
                   Available Properties
                 </h2>
 
-                <p className="mt-2 text-sm text-white/35">
+                <p className="mt-2 text-sm text-gray-500">
                   {filteredProperties.length}{" "}
                   {filteredProperties.length === 1
                     ? "property"
@@ -336,12 +330,13 @@ export default function PublicProperties({
                 propertyType !== "all" ||
                 listingType !== "all") && (
                 <button
+                  type="button"
                   onClick={() => {
                     setSearch("");
                     setPropertyType("all");
                     setListingType("all");
                   }}
-                  className="text-sm font-semibold text-[#f59e0b] transition hover:text-[#f97316]"
+                  className="text-sm font-bold text-[#f97316] transition hover:text-[#ef233c]"
                 >
                   Clear Filters
                 </button>
@@ -355,36 +350,37 @@ export default function PublicProperties({
               <img
                 src="/zertop-logo.png"
                 alt="Zertop Limited"
-                className="mx-auto h-12 w-auto object-contain opacity-70"
+                className="mx-auto h-14 w-auto object-contain opacity-80"
               />
 
-              <p className="mt-5 text-white/40">
+              <p className="mt-5 text-gray-500">
                 Loading available properties...
               </p>
             </div>
           ) : filteredProperties.length === 0 ? (
             /* EMPTY */
-            <div className="mt-8 rounded-2xl border border-white/10 bg-[#111111] p-12 text-center">
+            <div className="mt-8 rounded-3xl border border-gray-200 bg-gray-50 p-12 text-center">
               <Search
-                className="mx-auto text-white/20"
+                className="mx-auto text-gray-300"
                 size={38}
               />
 
-              <h3 className="mt-5 text-xl font-semibold">
+              <h3 className="mt-5 text-xl font-bold text-[#0b1b35]">
                 No properties found
               </h3>
 
-              <p className="mt-2 text-sm text-white/35">
+              <p className="mt-2 text-sm text-gray-500">
                 Try changing your search or filters.
               </p>
 
               <button
+                type="button"
                 onClick={() => {
                   setSearch("");
                   setPropertyType("all");
                   setListingType("all");
                 }}
-                className="mt-6 rounded-xl bg-gradient-to-r from-[#f59e0b] via-[#f97316] to-[#dc2626] px-5 py-2.5 text-sm font-bold transition hover:brightness-110"
+                className="mt-6 rounded-xl bg-gradient-to-r from-[#f5a400] via-[#f97316] to-[#ef233c] px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-orange-100 transition hover:-translate-y-0.5"
               >
                 Clear Filters
               </button>
@@ -393,8 +389,7 @@ export default function PublicProperties({
             /* PROPERTY GRID */
             <div className="mt-8 grid gap-7 md:grid-cols-2 lg:grid-cols-3">
               {filteredProperties.map((property) => {
-                const image =
-                  getPrimaryImage(property);
+                const image = getPrimaryImage(property);
 
                 const showBedrooms =
                   Number(property.bedrooms) > 0;
@@ -409,10 +404,10 @@ export default function PublicProperties({
                 return (
                   <article
                     key={property.id}
-                    className="group overflow-hidden rounded-2xl border border-white/10 bg-[#111111] shadow-[0_20px_60px_rgba(0,0,0,0.28)] transition duration-300 hover:-translate-y-1 hover:border-[#f59e0b]/40"
+                    className="group overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-orange-200 hover:shadow-xl"
                   >
                     {/* IMAGE */}
-                    <div className="relative overflow-hidden">
+                    <div className="relative overflow-hidden bg-gray-100">
                       {image ? (
                         <img
                           src={image}
@@ -420,46 +415,42 @@ export default function PublicProperties({
                           className="aspect-[16/10] w-full object-cover transition duration-500 group-hover:scale-105"
                         />
                       ) : (
-                        <div className="flex aspect-[16/10] items-center justify-center bg-[#181818] text-sm text-white/25">
+                        <div className="flex aspect-[16/10] items-center justify-center bg-gray-100 text-sm text-gray-400">
                           Property Image Coming Soon
                         </div>
                       )}
 
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/10" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
 
-                      <span className="absolute left-4 top-4 rounded-full bg-gradient-to-r from-[#f59e0b] via-[#f97316] to-[#dc2626] px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-white shadow-lg">
-                        {getListingLabel(
-                          property.listing_type
-                        )}
+                      <span className="absolute left-4 top-4 rounded-full bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-[#ef233c] shadow-lg">
+                        {getListingLabel(property.listing_type)}
                       </span>
 
-                      <div className="absolute bottom-4 left-4 right-4">
-                        <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#f59e0b]">
+                      <div className="absolute bottom-4 left-4">
+                        <span className="rounded-full bg-[#0b1b35]/90 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.15em] text-white backdrop-blur">
                           {property.property_type}
-                        </p>
+                        </span>
                       </div>
                     </div>
 
                     {/* CONTENT */}
-                    <div className="p-5">
-                      <h2 className="line-clamp-2 text-xl font-bold">
+                    <div className="p-6">
+                      <h2 className="line-clamp-2 text-xl font-black text-[#0b1b35]">
                         {property.title}
                       </h2>
 
-                      <p className="mt-3 text-sm font-medium text-white/60">
+                      <p className="mt-3 text-sm font-semibold text-gray-600">
                         {getEstateName(property)}
                       </p>
 
-                      <div className="mt-3 flex items-start gap-2 text-sm text-white/40">
+                      <div className="mt-3 flex items-start gap-2 text-sm text-gray-500">
                         <MapPin
                           size={16}
                           className="mt-0.5 shrink-0 text-[#f97316]"
                         />
 
                         <span>
-                          {getPropertyLocation(
-                            property
-                          )}
+                          {getPropertyLocation(property)}
                         </span>
                       </div>
 
@@ -467,12 +458,12 @@ export default function PublicProperties({
                       {(showBedrooms ||
                         showBathrooms ||
                         showLandSize) && (
-                        <div className="mt-5 flex flex-wrap gap-x-5 gap-y-3 border-y border-white/10 py-4 text-sm text-white/45">
+                        <div className="mt-5 flex flex-wrap gap-x-5 gap-y-3 border-y border-gray-100 py-4 text-sm text-gray-600">
                           {showBedrooms && (
                             <span className="flex items-center gap-2">
                               <BedDouble
                                 size={17}
-                                className="text-[#f59e0b]"
+                                className="text-[#f5a400]"
                               />
 
                               {property.bedrooms}{" "}
@@ -500,14 +491,13 @@ export default function PublicProperties({
                             <span className="flex items-center gap-2">
                               <LandPlot
                                 size={17}
-                                className="text-[#dc2626]"
+                                className="text-[#ef233c]"
                               />
 
                               {Number(
                                 property.land_size
                               ).toLocaleString()}{" "}
-                              {property.land_size_unit ||
-                                "sqm"}
+                              {property.land_size_unit || "sqm"}
                             </span>
                           )}
                         </div>
@@ -515,24 +505,22 @@ export default function PublicProperties({
 
                       {/* PRICE */}
                       <div className="mt-5">
-                        <p className="text-xs uppercase tracking-[0.15em] text-white/30">
+                        <p className="text-xs uppercase tracking-[0.15em] text-gray-400">
                           Price
                         </p>
 
-                        <p className="mt-1 text-2xl font-black">
-                          ₦
-                          {Number(
-                            property.price
-                          ).toLocaleString()}
+                        <p className="mt-1 text-2xl font-black text-[#0b1b35]">
+                          ₦{Number(property.price).toLocaleString()}
                         </p>
                       </div>
 
                       {/* CTA */}
                       <button
+                        type="button"
                         onClick={() =>
                           onViewProperty(property.id)
                         }
-                        className="mt-5 w-full rounded-xl bg-gradient-to-r from-[#f59e0b] via-[#f97316] to-[#dc2626] py-3.5 font-bold transition hover:brightness-110"
+                        className="mt-5 w-full rounded-xl bg-[#0b1b35] py-3.5 font-bold text-white transition hover:bg-[#f97316]"
                       >
                         View Property Details
                       </button>
@@ -546,25 +534,24 @@ export default function PublicProperties({
       </main>
 
       {/* FOOTER */}
-      <footer className="mt-16 border-t border-white/10 bg-[#050505]">
+      <footer className="mt-16 border-t border-gray-200 bg-[#f8fafc]">
         <div className="mx-auto flex max-w-7xl flex-col gap-6 px-5 py-10 md:flex-row md:items-end md:justify-between md:px-6">
           <div>
             <img
               src="/zertop-logo.png"
               alt="Zertop Limited"
-              className="h-12 w-auto object-contain"
+              className="h-14 w-auto object-contain"
             />
 
-            <p className="mt-4 max-w-md text-sm leading-6 text-white/35">
+            <p className="mt-4 max-w-md text-sm leading-6 text-gray-500">
               Real Estate & Property Development.
               Discover properties, land and investment
               opportunities from Zertop Limited.
             </p>
           </div>
 
-          <div className="text-sm text-white/30 md:text-right">
+          <div className="text-sm text-gray-400 md:text-right">
             <p>© 2026 Zertop Limited.</p>
-
             <p className="mt-1">
               All rights reserved.
             </p>
