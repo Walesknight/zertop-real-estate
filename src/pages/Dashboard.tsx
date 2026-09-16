@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
+
 import {
-  Building2,
-  MapPinned,
-  Users,
-  UserRoundSearch,
-  CalendarDays,
   BadgeDollarSign,
+  Building2,
+  CalendarDays,
   CreditCard,
   LogOut,
+  MapPinned,
   ShieldCheck,
+  UserRoundSearch,
+  Users,
 } from "lucide-react";
 
 import { supabase } from "../lib/supabase";
@@ -16,7 +17,7 @@ import { supabase } from "../lib/supabase";
 type StaffRole =
   | "admin"
   | "manager"
-  | "agent"
+  | "realtor"
   | "staff";
 
 type DashboardProps = {
@@ -51,22 +52,20 @@ export default function Dashboard({
   onStaff,
   staffRole,
 }: DashboardProps) {
-  const [stats, setStats] =
-    useState<Stats>({
-      properties: 0,
-      customers: 0,
-      leads: 0,
-      inspections: 0,
-      totalSales: 0,
-      totalPayments: 0,
-    });
+  const [stats, setStats] = useState<Stats>({
+    properties: 0,
+    customers: 0,
+    leads: 0,
+    inspections: 0,
+    totalSales: 0,
+    totalPayments: 0,
+  });
 
-  const [loading, setLoading] =
-    useState(true);
+  const [loading, setLoading] = useState(true);
 
-  // =====================================
-  // ROLE PERMISSIONS
-  // =====================================
+  /* =====================================
+     ROLE PERMISSIONS
+  ===================================== */
 
   const isAdmin =
     staffRole === "admin";
@@ -74,8 +73,8 @@ export default function Dashboard({
   const isManager =
     staffRole === "manager";
 
-  const isAgent =
-    staffRole === "agent";
+  const isRealtor =
+    staffRole === "realtor";
 
   const isStaff =
     staffRole === "staff";
@@ -84,24 +83,24 @@ export default function Dashboard({
     isAdmin || isManager;
 
   const canViewProperties =
-    isAdmin || isManager || isAgent;
+    isAdmin || isManager || isRealtor;
 
   const canViewCustomers =
     isAdmin ||
     isManager ||
-    isAgent ||
+    isRealtor ||
     isStaff;
 
   const canViewLeads =
     isAdmin ||
     isManager ||
-    isAgent ||
+    isRealtor ||
     isStaff;
 
   const canViewInspections =
     isAdmin ||
     isManager ||
-    isAgent;
+    isRealtor;
 
   const canViewSales =
     isAdmin || isManager;
@@ -112,9 +111,9 @@ export default function Dashboard({
   const canViewStaff =
     isAdmin;
 
-  // =====================================
-  // LOAD DASHBOARD
-  // =====================================
+  /* =====================================
+     LOAD DASHBOARD
+  ===================================== */
 
   useEffect(() => {
     const loadDashboard = async () => {
@@ -123,15 +122,12 @@ export default function Dashboard({
       try {
         const {
           data: { user },
-        } =
-          await supabase.auth.getUser();
+        } = await supabase.auth.getUser();
 
         if (!user) {
           return;
         }
 
-        // Get the company directly from
-        // the logged-in staff record.
         const {
           data: staffMember,
           error: staffError,
@@ -316,17 +312,17 @@ export default function Dashboard({
     loadDashboard();
   }, []);
 
-  // =====================================
-  // LOGOUT
-  // =====================================
+  /* =====================================
+     LOGOUT
+  ===================================== */
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
   };
 
-  // =====================================
-  // DASHBOARD CARDS
-  // =====================================
+  /* =====================================
+     DASHBOARD CARDS
+  ===================================== */
 
   const cards = [
     ...(canViewEstates
@@ -336,6 +332,9 @@ export default function Dashboard({
             value: "Manage",
             icon: MapPinned,
             action: onEstates,
+            loadingValue: false,
+            description:
+              "Manage Zertop developments and estates.",
           },
         ]
       : []),
@@ -348,6 +347,9 @@ export default function Dashboard({
               stats.properties.toString(),
             icon: Building2,
             action: onProperties,
+            loadingValue: true,
+            description:
+              "View and manage property listings.",
           },
         ]
       : []),
@@ -360,6 +362,9 @@ export default function Dashboard({
               stats.customers.toString(),
             icon: Users,
             action: onCustomers,
+            loadingValue: true,
+            description:
+              "Manage registered property customers.",
           },
         ]
       : []),
@@ -372,6 +377,9 @@ export default function Dashboard({
               stats.leads.toString(),
             icon: UserRoundSearch,
             action: onLeads,
+            loadingValue: true,
+            description:
+              "Follow up property enquiries and prospects.",
           },
         ]
       : []),
@@ -379,13 +387,15 @@ export default function Dashboard({
     ...(canViewInspections
       ? [
           {
-            title:
-              "Inspections",
+            title: "Inspections",
             value:
               stats.inspections.toString(),
             icon: CalendarDays,
             action:
               onInspections,
+            loadingValue: true,
+            description:
+              "Manage scheduled property inspections.",
           },
         ]
       : []),
@@ -398,6 +408,9 @@ export default function Dashboard({
             icon:
               BadgeDollarSign,
             action: onSales,
+            loadingValue: true,
+            description:
+              "Total value of active property sales.",
           },
         ]
       : []),
@@ -410,6 +423,9 @@ export default function Dashboard({
             value: `₦${stats.totalPayments.toLocaleString()}`,
             icon: CreditCard,
             action: onPayments,
+            loadingValue: true,
+            description:
+              "Initial deposits and recorded payments.",
           },
         ]
       : []),
@@ -422,6 +438,9 @@ export default function Dashboard({
             value: "Manage",
             icon: ShieldCheck,
             action: onStaff,
+            loadingValue: false,
+            description:
+              "Manage staff accounts, roles and access.",
           },
         ]
       : []),
@@ -432,173 +451,342 @@ export default function Dashboard({
       ? "Administrator"
       : staffRole === "manager"
         ? "Manager"
-        : staffRole === "agent"
-          ? "Agent"
+        : staffRole === "realtor"
+          ? "Realtor"
           : "Staff";
 
+  const outstandingBalance =
+    Math.max(
+      stats.totalSales -
+        stats.totalPayments,
+      0
+    );
+
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
-      {/* HEADER */}
+    <div className="min-h-screen bg-[#f8fafc] text-[#0b1b35]">
+      {/* =====================================
+          HEADER
+      ====================================== */}
 
-      <header className="border-b border-slate-800 bg-slate-900">
-        <div className="flex items-center justify-between px-6 py-4">
-          <div>
-            <h1 className="text-xl font-bold">
-              Zertop Limited
-            </h1>
+      <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 shadow-sm backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3 md:px-6">
+          {/* LOGO */}
+          <div className="flex items-center gap-4">
+            <img
+              src="/zertop-logo.png"
+              alt="Zertop Limited"
+              className="h-11 w-auto object-contain md:h-13"
+            />
 
-            <p className="text-sm text-slate-400">
-              Real Estate Management
-              System
-            </p>
+            <div className="hidden border-l border-gray-200 pl-4 md:block">
+              <p className="text-sm font-bold text-[#0b1b35]">
+                Management System
+              </p>
+
+              <p className="mt-0.5 text-xs text-gray-400">
+                Staff Dashboard
+              </p>
+            </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          {/* USER */}
+          <div className="flex items-center gap-3">
             <div className="hidden text-right sm:block">
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-gray-400">
                 Signed in as
               </p>
 
-              <p className="text-sm font-medium text-orange-500">
+              <div className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-orange-50 px-3 py-1 text-xs font-bold text-[#f97316]">
+                <ShieldCheck size={13} />
                 {roleName}
-              </p>
+              </div>
             </div>
 
             <button
               type="button"
               onClick={handleLogout}
-              className="flex items-center gap-2 rounded-lg border border-slate-700 px-4 py-2 text-sm text-slate-300 transition hover:bg-slate-800"
+              className="flex items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm font-semibold text-gray-600 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600"
             >
-              <LogOut size={18} />
-              Logout
+              <LogOut size={17} />
+
+              <span className="hidden sm:inline">
+                Logout
+              </span>
             </button>
           </div>
         </div>
+
+        <div className="h-1 w-full bg-gradient-to-r from-[#f5a400] via-[#f97316] to-[#ef233c]" />
       </header>
 
-      {/* MAIN */}
+      {/* =====================================
+          MAIN
+      ====================================== */}
 
-      <main className="mx-auto max-w-7xl p-6">
-        <div className="mb-8">
-          <p className="text-sm font-semibold text-orange-500">
-            Dashboard
-          </p>
+      <main className="mx-auto max-w-7xl px-5 py-8 md:px-6 md:py-10">
+        {/* WELCOME */}
+        <section className="relative overflow-hidden rounded-[30px] border border-orange-100 bg-[#fffaf5] p-7 md:p-10">
+          <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-yellow-100/80 blur-[90px]" />
 
-          <h2 className="mt-1 text-3xl font-bold">
-            Welcome to Zertop
-          </h2>
+          <div className="pointer-events-none absolute -bottom-32 right-40 h-64 w-64 rounded-full bg-red-100/60 blur-[100px]" />
 
-          <p className="mt-2 text-slate-400">
-            Manage the areas available
-            to your staff role.
-          </p>
-        </div>
+          <div className="relative z-10">
+            <div className="inline-flex items-center gap-2 rounded-full border border-orange-200 bg-white px-3 py-1.5 text-xs font-bold text-[#f97316] shadow-sm">
+              <ShieldCheck size={14} />
+              {roleName} Access
+            </div>
 
-        {/* CARDS */}
+            <h1 className="mt-5 text-3xl font-black tracking-tight text-[#0b1b35] md:text-4xl">
+              Welcome to Zertop
+            </h1>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {cards.map((card) => {
-            const Icon = card.icon;
-
-            return (
-              <button
-                key={card.title}
-                type="button"
-                onClick={card.action}
-                className="rounded-2xl border border-slate-800 bg-slate-900 p-6 text-left transition hover:border-orange-500"
-              >
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-sm text-slate-400">
-                      {card.title}
-                    </p>
-
-                    <h3 className="mt-2 text-2xl font-bold">
-                      {loading
-                        ? "..."
-                        : card.value}
-                    </h3>
-                  </div>
-
-                  <div className="rounded-xl bg-orange-500/10 p-3 text-orange-500">
-                    <Icon size={24} />
-                  </div>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* QUICK ACTIONS */}
-
-        <div className="mt-10">
-          <h3 className="text-xl font-semibold">
-            Quick Actions
-          </h3>
-
-          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {canViewProperties && (
-              <button
-                type="button"
-                onClick={onProperties}
-                className="rounded-xl bg-orange-500 px-5 py-4 font-semibold transition hover:bg-orange-600"
-              >
-                Add Property
-              </button>
-            )}
-
-            {canViewCustomers && (
-              <button
-                type="button"
-                onClick={onCustomers}
-                className="rounded-xl border border-slate-700 bg-slate-900 px-5 py-4 font-semibold transition hover:bg-slate-800"
-              >
-                Add Customer
-              </button>
-            )}
-
-            {canViewLeads && (
-              <button
-                type="button"
-                onClick={onLeads}
-                className="rounded-xl border border-slate-700 bg-slate-900 px-5 py-4 font-semibold transition hover:bg-slate-800"
-              >
-                Add Lead
-              </button>
-            )}
-
-            {canViewInspections && (
-              <button
-                type="button"
-                onClick={
-                  onInspections
-                }
-                className="rounded-xl border border-slate-700 bg-slate-900 px-5 py-4 font-semibold transition hover:bg-slate-800"
-              >
-                Schedule Inspection
-              </button>
-            )}
+            <p className="mt-3 max-w-2xl leading-7 text-gray-600">
+              Manage the properties, customers,
+              enquiries and operations available to your
+              staff account.
+            </p>
           </div>
-        </div>
+        </section>
 
-        {/* FINANCIAL ACTIONS */}
+        {/* =====================================
+            OVERVIEW
+        ====================================== */}
+
+        <section className="mt-10">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#f97316]">
+              Overview
+            </p>
+
+            <h2 className="mt-2 text-2xl font-black text-[#0b1b35]">
+              Management Dashboard
+            </h2>
+          </div>
+
+          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {cards.map((card) => {
+              const Icon = card.icon;
+
+              return (
+                <button
+                  key={card.title}
+                  type="button"
+                  onClick={card.action}
+                  className="group rounded-3xl border border-gray-200 bg-white p-6 text-left shadow-sm transition duration-300 hover:-translate-y-1 hover:border-orange-200 hover:shadow-lg"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-gray-500">
+                        {card.title}
+                      </p>
+
+                      <h3 className="mt-2 break-words text-2xl font-black text-[#0b1b35]">
+                        {loading &&
+                        card.loadingValue
+                          ? "..."
+                          : card.value}
+                      </h3>
+                    </div>
+
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-orange-50 text-[#f97316] transition group-hover:bg-[#f97316] group-hover:text-white">
+                      <Icon size={23} />
+                    </div>
+                  </div>
+
+                  <p className="mt-5 border-t border-gray-100 pt-4 text-sm leading-6 text-gray-500">
+                    {card.description}
+                  </p>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* =====================================
+            FINANCIAL SUMMARY
+        ====================================== */}
 
         {(canViewSales ||
           canViewPayments) && (
-          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+          <section className="mt-10">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#f97316]">
+                Financial Overview
+              </p>
+
+              <h2 className="mt-2 text-2xl font-black text-[#0b1b35]">
+                Sales & Payments
+              </h2>
+            </div>
+
+            <div className="mt-6 grid gap-5 md:grid-cols-3">
+              {canViewSales && (
+                <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm text-gray-500">
+                        Property Sales
+                      </p>
+
+                      <p className="mt-2 text-2xl font-black text-[#0b1b35]">
+                        {loading
+                          ? "..."
+                          : `₦${stats.totalSales.toLocaleString()}`}
+                      </p>
+                    </div>
+
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-50 text-[#f97316]">
+                      <BadgeDollarSign
+                        size={24}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {canViewPayments && (
+                <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm text-gray-500">
+                        Payments Received
+                      </p>
+
+                      <p className="mt-2 text-2xl font-black text-[#0b1b35]">
+                        {loading
+                          ? "..."
+                          : `₦${stats.totalPayments.toLocaleString()}`}
+                      </p>
+                    </div>
+
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-50 text-green-600">
+                      <CreditCard
+                        size={24}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {canViewSales &&
+                canViewPayments && (
+                  <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <p className="text-sm text-gray-500">
+                          Outstanding Balance
+                        </p>
+
+                        <p className="mt-2 text-2xl font-black text-[#0b1b35]">
+                          {loading
+                            ? "..."
+                            : `₦${outstandingBalance.toLocaleString()}`}
+                        </p>
+                      </div>
+
+                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-[#ef233c]">
+                        <BadgeDollarSign
+                          size={24}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+            </div>
+          </section>
+        )}
+
+        {/* =====================================
+            QUICK ACTIONS
+        ====================================== */}
+
+        <section className="mt-10">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#f97316]">
+              Quick Actions
+            </p>
+
+            <h2 className="mt-2 text-2xl font-black text-[#0b1b35]">
+              Manage Zertop
+            </h2>
+          </div>
+
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {canViewProperties && (
+              <QuickAction
+                title="Manage Properties"
+                text="Add or update listings."
+                icon={
+                  <Building2 size={21} />
+                }
+                onClick={onProperties}
+                primary
+              />
+            )}
+
+            {canViewCustomers && (
+              <QuickAction
+                title="Customers"
+                text="Manage customer records."
+                icon={<Users size={21} />}
+                onClick={onCustomers}
+              />
+            )}
+
+            {canViewLeads && (
+              <QuickAction
+                title="Leads"
+                text="Follow up enquiries."
+                icon={
+                  <UserRoundSearch
+                    size={21}
+                  />
+                }
+                onClick={onLeads}
+              />
+            )}
+
+            {canViewInspections && (
+              <QuickAction
+                title="Inspections"
+                text="Manage appointments."
+                icon={
+                  <CalendarDays
+                    size={21}
+                  />
+                }
+                onClick={onInspections}
+              />
+            )}
+          </div>
+        </section>
+
+        {/* =====================================
+            SALES / PAYMENTS
+        ====================================== */}
+
+        {(canViewSales ||
+          canViewPayments) && (
+          <section className="mt-10 grid gap-5 md:grid-cols-2">
             {canViewSales && (
               <button
                 type="button"
                 onClick={onSales}
-                className="rounded-2xl border border-slate-800 bg-slate-900 p-5 text-left transition hover:border-orange-500"
+                className="group rounded-3xl border border-gray-200 bg-white p-6 text-left shadow-sm transition hover:-translate-y-1 hover:border-orange-200 hover:shadow-lg"
               >
-                <p className="font-semibold">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-50 text-[#f97316]">
+                  <BadgeDollarSign
+                    size={24}
+                  />
+                </div>
+
+                <p className="mt-5 text-lg font-bold text-[#0b1b35]">
                   Record Property Sale
                 </p>
 
-                <p className="mt-1 text-sm text-slate-400">
-                  Create a new customer
-                  property purchase.
+                <p className="mt-2 text-sm leading-6 text-gray-500">
+                  Create and manage customer property
+                  purchases.
                 </p>
               </button>
             )}
@@ -607,54 +795,140 @@ export default function Dashboard({
               <button
                 type="button"
                 onClick={onPayments}
-                className="rounded-2xl border border-slate-800 bg-slate-900 p-5 text-left transition hover:border-orange-500"
+                className="group rounded-3xl border border-gray-200 bg-white p-6 text-left shadow-sm transition hover:-translate-y-1 hover:border-orange-200 hover:shadow-lg"
               >
-                <p className="font-semibold">
-                  Record Customer
-                  Payment
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-50 text-green-600">
+                  <CreditCard
+                    size={24}
+                  />
+                </div>
+
+                <p className="mt-5 text-lg font-bold text-[#0b1b35]">
+                  Record Customer Payment
                 </p>
 
-                <p className="mt-1 text-sm text-slate-400">
-                  Record installments
-                  and monitor balances.
+                <p className="mt-2 text-sm leading-6 text-gray-500">
+                  Record installments and monitor
+                  customer payments.
                 </p>
               </button>
             )}
-          </div>
+          </section>
         )}
 
-        {/* ADMIN ACTION */}
+        {/* =====================================
+            STAFF ADMIN
+        ====================================== */}
 
         {canViewStaff && (
-          <div className="mt-8">
+          <section className="mt-10">
             <button
               type="button"
               onClick={onStaff}
-              className="w-full rounded-2xl border border-slate-800 bg-slate-900 p-5 text-left transition hover:border-orange-500 sm:max-w-md"
+              className="w-full rounded-3xl border border-orange-100 bg-[#fffaf5] p-6 text-left transition hover:border-orange-300 sm:max-w-xl"
             >
-              <div className="flex items-center gap-3">
-                <div className="rounded-xl bg-orange-500/10 p-3 text-orange-500">
+              <div className="flex items-start gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-[#f97316] shadow-sm">
                   <ShieldCheck
-                    size={22}
+                    size={23}
                   />
                 </div>
 
                 <div>
-                  <p className="font-semibold">
+                  <p className="font-bold text-[#0b1b35]">
                     Staff Management
                   </p>
 
-                  <p className="mt-1 text-sm text-slate-400">
-                    Manage staff
-                    accounts, roles and
-                    permissions.
+                  <p className="mt-2 text-sm leading-6 text-gray-500">
+                    Create and manage staff accounts,
+                    roles and access permissions.
                   </p>
                 </div>
               </div>
             </button>
-          </div>
+          </section>
         )}
       </main>
+
+      {/* FOOTER */}
+      <footer className="mt-14 border-t border-gray-200 bg-white">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-8 text-sm text-gray-400 md:flex-row md:items-center md:justify-between md:px-6">
+          <div className="flex items-center gap-3">
+            <img
+              src="/zertop-logo.png"
+              alt="Zertop Limited"
+              className="h-9 w-auto object-contain"
+            />
+
+            <span>
+              Zertop Management System
+            </span>
+          </div>
+
+          <p>
+            © 2026 Zertop Limited. Internal staff
+            access.
+          </p>
+        </div>
+      </footer>
     </div>
+  );
+}
+
+type QuickActionProps = {
+  title: string;
+  text: string;
+  icon: React.ReactNode;
+  onClick: () => void;
+  primary?: boolean;
+};
+
+function QuickAction({
+  title,
+  text,
+  icon,
+  onClick,
+  primary = false,
+}: QuickActionProps) {
+  if (primary) {
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        className="rounded-2xl bg-gradient-to-r from-[#f5a400] via-[#f97316] to-[#ef233c] p-5 text-left text-white shadow-lg shadow-orange-100 transition hover:-translate-y-1"
+      >
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15">
+          {icon}
+        </div>
+
+        <p className="mt-4 font-bold">
+          {title}
+        </p>
+
+        <p className="mt-1 text-sm text-white/80">
+          {text}
+        </p>
+      </button>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="rounded-2xl border border-gray-200 bg-white p-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-orange-200 hover:shadow-md"
+    >
+      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-[#f97316]">
+        {icon}
+      </div>
+
+      <p className="mt-4 font-bold text-[#0b1b35]">
+        {title}
+      </p>
+
+      <p className="mt-1 text-sm text-gray-500">
+        {text}
+      </p>
+    </button>
   );
 }

@@ -199,7 +199,7 @@ Deno.serve(async (req) => {
     const allowedRoles = [
       "admin",
       "manager",
-      "agent",
+      "realtor",
       "staff",
     ];
 
