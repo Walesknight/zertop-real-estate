@@ -43,8 +43,19 @@ type Page =
 type StaffRole =
   | "admin"
   | "manager"
-  | "agent"
+  | "realtor"
   | "staff";
+
+const isStaffRole = (
+  role: unknown
+): role is StaffRole => {
+  return (
+    role === "admin" ||
+    role === "manager" ||
+    role === "realtor" ||
+    role === "staff"
+  );
+};
 
 function App() {
   const [session, setSession] =
@@ -73,15 +84,29 @@ function App() {
   // PERMISSIONS
   // =====================================
 
-  const canAccess = (targetPage: Page) => {
+  const canAccess = (
+    targetPage: Page
+  ) => {
     if (!staffRole) {
       return false;
     }
 
+    // ADMIN
     if (staffRole === "admin") {
-      return true;
+      return [
+        "dashboard",
+        "estates",
+        "properties",
+        "customers",
+        "leads",
+        "inspections",
+        "sales",
+        "payments",
+        "staff",
+      ].includes(targetPage);
     }
 
+    // MANAGER
     if (staffRole === "manager") {
       return [
         "dashboard",
@@ -95,16 +120,17 @@ function App() {
       ].includes(targetPage);
     }
 
-    if (staffRole === "agent") {
+    // REALTOR
+    if (staffRole === "realtor") {
       return [
         "dashboard",
-        "properties",
         "customers",
         "leads",
         "inspections",
       ].includes(targetPage);
     }
 
+    // STAFF
     if (staffRole === "staff") {
       return [
         "dashboard",
@@ -116,15 +142,27 @@ function App() {
     return false;
   };
 
+  // =====================================
+  // PERMISSION DENIED SCREEN
+  // =====================================
+
   const renderPermissionDenied = () => {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#080808] px-6 text-white">
-        <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#111111] p-8 text-center">
-          <h1 className="text-2xl font-bold">
+      <div className="flex min-h-screen items-center justify-center bg-[#f8fafc] px-6">
+        <div className="w-full max-w-md rounded-[28px] border border-gray-200 bg-white p-8 text-center shadow-xl">
+          <img
+            src="/zertop-logo.png"
+            alt="Zertop Limited"
+            className="mx-auto h-14 w-auto object-contain"
+          />
+
+          <div className="mx-auto mt-7 h-1 w-20 rounded-full bg-gradient-to-r from-[#f5a400] via-[#f97316] to-[#ef233c]" />
+
+          <h1 className="mt-6 text-2xl font-black text-[#0b1b35]">
             Permission Denied
           </h1>
 
-          <p className="mt-3 text-white/45">
+          <p className="mt-3 leading-7 text-gray-500">
             Your staff role does not have permission
             to access this section.
           </p>
@@ -134,7 +172,7 @@ function App() {
             onClick={() =>
               setPage("dashboard")
             }
-            className="mt-6 w-full rounded-xl bg-gradient-to-r from-[#f59e0b] via-[#f97316] to-[#dc2626] px-6 py-3 font-semibold transition hover:brightness-110"
+            className="mt-7 w-full rounded-xl bg-gradient-to-r from-[#f5a400] via-[#f97316] to-[#ef233c] px-6 py-3.5 font-bold text-white shadow-lg shadow-orange-100 transition hover:-translate-y-0.5"
           >
             Return to Dashboard
           </button>
@@ -168,6 +206,7 @@ function App() {
           if (!newSession) {
             setStaffVerified(null);
             setStaffRole(null);
+            setPage("home");
           }
         }
       );
@@ -195,7 +234,9 @@ function App() {
       const { data, error } =
         await supabase
           .from("staff_members")
-          .select("id,active,role")
+          .select(
+            "id,active,role,company_id"
+          )
           .eq(
             "user_id",
             session.user.id
@@ -222,10 +263,31 @@ function App() {
         return;
       }
 
+      if (!data.company_id) {
+        console.error(
+          "Staff account is not linked to a company."
+        );
+
+        setStaffVerified(false);
+        setStaffRole(null);
+
+        return;
+      }
+
+      if (!isStaffRole(data.role)) {
+        console.error(
+          "Invalid staff role:",
+          data.role
+        );
+
+        setStaffVerified(false);
+        setStaffRole(null);
+
+        return;
+      }
+
+      setStaffRole(data.role);
       setStaffVerified(true);
-      setStaffRole(
-        data.role as StaffRole
-      );
     };
 
     verifyStaff();
@@ -237,15 +299,15 @@ function App() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#080808] text-white">
+      <div className="flex min-h-screen items-center justify-center bg-[#f8fafc]">
         <div className="text-center">
           <img
             src="/zertop-logo.png"
             alt="Zertop Limited"
-            className="mx-auto h-14 w-auto object-contain"
+            className="mx-auto h-16 w-auto object-contain"
           />
 
-          <p className="mt-5 text-white/40">
+          <p className="mt-5 text-sm text-gray-500">
             Loading Zertop Limited...
           </p>
         </div>
@@ -325,7 +387,9 @@ function App() {
   // PUBLIC DEVELOPMENTS
   // =====================================
 
-  if (page === "developments") {
+  if (
+    page === "developments"
+  ) {
     return (
       <Developments
         onBack={() =>
@@ -397,7 +461,7 @@ function App() {
   }
 
   // =====================================
-  // PUBLIC PROPERTY CATALOGUE
+  // PUBLIC PROPERTIES
   // =====================================
 
   if (
@@ -490,8 +554,18 @@ function App() {
     staffVerified === null
   ) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#080808] text-white">
-        Verifying staff access...
+      <div className="flex min-h-screen items-center justify-center bg-[#f8fafc] px-6">
+        <div className="text-center">
+          <img
+            src="/zertop-logo.png"
+            alt="Zertop Limited"
+            className="mx-auto h-14 w-auto object-contain"
+          />
+
+          <p className="mt-5 text-sm font-medium text-gray-500">
+            Verifying staff access...
+          </p>
+        </div>
       </div>
     );
   }
@@ -504,16 +578,22 @@ function App() {
     staffVerified === false
   ) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#080808] px-6 text-white">
-        <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#111111] p-8 text-center">
-          <h1 className="text-2xl font-bold">
+      <div className="flex min-h-screen items-center justify-center bg-[#f8fafc] px-6">
+        <div className="w-full max-w-md rounded-[28px] border border-gray-200 bg-white p-8 text-center shadow-xl">
+          <img
+            src="/zertop-logo.png"
+            alt="Zertop Limited"
+            className="mx-auto h-14 w-auto object-contain"
+          />
+
+          <h1 className="mt-7 text-2xl font-black text-[#0b1b35]">
             Access Denied
           </h1>
 
-          <p className="mt-3 text-white/45">
-            This account is not
-            authorized to access the
-            Zertop staff dashboard.
+          <p className="mt-3 leading-7 text-gray-500">
+            This account is not authorized
+            to access the Zertop management
+            dashboard.
           </p>
 
           <button
@@ -525,7 +605,7 @@ function App() {
               setStaffRole(null);
               setPage("home");
             }}
-            className="mt-6 w-full rounded-xl bg-gradient-to-r from-[#f59e0b] via-[#f97316] to-[#dc2626] px-6 py-3 font-semibold transition hover:brightness-110"
+            className="mt-7 w-full rounded-xl bg-gradient-to-r from-[#f5a400] via-[#f97316] to-[#ef233c] px-6 py-3.5 font-bold text-white"
           >
             Return to Website
           </button>
@@ -535,7 +615,8 @@ function App() {
   }
 
   // =====================================
-  // ADMIN / STAFF PAGES
+  // ESTATES
+  // ADMIN + MANAGER ONLY
   // =====================================
 
   if (page === "estates") {
@@ -553,6 +634,11 @@ function App() {
       />
     );
   }
+
+  // =====================================
+  // PROPERTIES
+  // ADMIN + MANAGER ONLY
+  // =====================================
 
   if (
     page === "properties"
@@ -572,6 +658,10 @@ function App() {
     );
   }
 
+  // =====================================
+  // CUSTOMERS
+  // =====================================
+
   if (
     page === "customers"
   ) {
@@ -590,8 +680,14 @@ function App() {
     );
   }
 
+  // =====================================
+  // LEADS
+  // =====================================
+
   if (page === "leads") {
-    if (!canAccess("leads")) {
+    if (
+      !canAccess("leads")
+    ) {
       return renderPermissionDenied();
     }
 
@@ -604,11 +700,17 @@ function App() {
     );
   }
 
+  // =====================================
+  // INSPECTIONS
+  // =====================================
+
   if (
     page === "inspections"
   ) {
     if (
-      !canAccess("inspections")
+      !canAccess(
+        "inspections"
+      )
     ) {
       return renderPermissionDenied();
     }
@@ -622,8 +724,15 @@ function App() {
     );
   }
 
+  // =====================================
+  // SALES
+  // ADMIN + MANAGER ONLY
+  // =====================================
+
   if (page === "sales") {
-    if (!canAccess("sales")) {
+    if (
+      !canAccess("sales")
+    ) {
       return renderPermissionDenied();
     }
 
@@ -635,6 +744,11 @@ function App() {
       />
     );
   }
+
+  // =====================================
+  // PAYMENTS
+  // ADMIN + MANAGER ONLY
+  // =====================================
 
   if (
     page === "payments"
@@ -654,8 +768,15 @@ function App() {
     );
   }
 
+  // =====================================
+  // STAFF MANAGEMENT
+  // ADMIN ONLY
+  // =====================================
+
   if (page === "staff") {
-    if (!canAccess("staff")) {
+    if (
+      !canAccess("staff")
+    ) {
       return renderPermissionDenied();
     }
 

@@ -988,7 +988,7 @@ export default function Home({
         {/* SOCIAL MEDIA */}
 <div className="mt-5 flex items-center gap-3">
   <a
-    href="instagram.com/zertoplimited"
+    href="https://instagram.com/zertoplimited"
     target="_blank"
     rel="noopener noreferrer"
     aria-label="Zertop Instagram"
@@ -998,7 +998,7 @@ export default function Home({
   </a>
 
   <a
-    href="facebook.com/zertoplimited"
+    href="https://facebook.com/zertoplimited"
     target="_blank"
     rel="noopener noreferrer"
     aria-label="Zertop Facebook"
@@ -1008,7 +1008,7 @@ export default function Home({
   </a>
 
   <a
-    href="tiktok.com/zertop.real.estate"
+    href="https://tiktok.com/@zertop.real.estate"
     target="_blank"
     rel="noopener noreferrer"
     aria-label="Zertop TikTok"
@@ -1018,7 +1018,7 @@ export default function Home({
   </a>
 
   <a
-    href="linkedin.com/zertoplimited"
+    href="https://linkedin.com/zertoplimited"
     target="_blank"
     rel="noopener noreferrer"
     aria-label="Zertop LinkedIn"
