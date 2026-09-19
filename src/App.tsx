@@ -81,6 +81,90 @@ function App() {
     useState<StaffRole | null>(null);
 
   // =====================================
+  // PUBLIC NAVIGATION
+  // =====================================
+
+  const clearPublicHash = () => {
+    window.history.replaceState(
+      null,
+      "",
+      `${window.location.pathname}${window.location.search}`
+    );
+  };
+
+  const goToPublicPage = (
+    targetPage: Page
+  ) => {
+    clearPublicHash();
+    setPage(targetPage);
+
+    window.setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }, 0);
+  };
+
+  const goToWhyZertop = () => {
+    setPage("home");
+
+    window.history.replaceState(
+      null,
+      "",
+      `${window.location.pathname}${window.location.search}#why-zertop`
+    );
+
+    window.setTimeout(() => {
+      document
+        .getElementById(
+          "why-zertop"
+        )
+        ?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+    }, 50);
+  };
+
+  const goToStaffLogin = () => {
+    clearPublicHash();
+
+    if (session) {
+      setPage("dashboard");
+    } else {
+      setPage("login");
+    }
+  };
+
+  const publicNavigation = {
+    onHome: () =>
+      goToPublicPage("home"),
+
+    onProperties: () =>
+      goToPublicPage(
+        "public-properties"
+      ),
+
+    onDevelopments: () =>
+      goToPublicPage(
+        "developments"
+      ),
+
+    onWhyZertop:
+      goToWhyZertop,
+
+    onAbout: () =>
+      goToPublicPage("about"),
+
+    onContact: () =>
+      goToPublicPage("contact"),
+
+    onStaffLogin:
+      goToStaffLogin,
+  };
+
+  // =====================================
   // PERMISSIONS
   // =====================================
 
@@ -322,18 +406,7 @@ function App() {
   if (page === "home") {
     return (
       <Home
-        onBrowseProperties={() =>
-          setPage(
-            "public-properties"
-          )
-        }
-        onStaffLogin={() => {
-          if (session) {
-            setPage("dashboard");
-          } else {
-            setPage("login");
-          }
-        }}
+        {...publicNavigation}
         onViewProperty={(
           propertyId
         ) => {
@@ -341,19 +414,10 @@ function App() {
             propertyId
           );
 
-          setPage(
+          goToPublicPage(
             "property-details"
           );
         }}
-        onAbout={() =>
-          setPage("about")
-        }
-        onDevelopments={() =>
-          setPage("developments")
-        }
-        onContact={() =>
-          setPage("contact")
-        }
       />
     );
   }
@@ -365,20 +429,7 @@ function App() {
   if (page === "about") {
     return (
       <About
-        onBack={() =>
-          setPage("home")
-        }
-        onProperties={() =>
-          setPage(
-            "public-properties"
-          )
-        }
-        onDevelopments={() =>
-          setPage("developments")
-        }
-        onContact={() =>
-          setPage("contact")
-        }
+        {...publicNavigation}
       />
     );
   }
@@ -392,20 +443,7 @@ function App() {
   ) {
     return (
       <Developments
-        onBack={() =>
-          setPage("home")
-        }
-        onProperties={() =>
-          setPage(
-            "public-properties"
-          )
-        }
-        onAbout={() =>
-          setPage("about")
-        }
-        onContact={() =>
-          setPage("contact")
-        }
+        {...publicNavigation}
       />
     );
   }
@@ -417,22 +455,7 @@ function App() {
   if (page === "contact") {
     return (
       <Contact
-        onBack={() =>
-          setPage("home")
-        }
-        onProperties={() =>
-          setPage(
-            "public-properties"
-          )
-        }
-        onAbout={() =>
-          setPage("about")
-        }
-        onDevelopments={() =>
-          setPage(
-            "developments"
-          )
-        }
+        {...publicNavigation}
       />
     );
   }
@@ -440,19 +463,16 @@ function App() {
   // =====================================
   // PUBLIC PROPERTY DETAILS
   // =====================================
-
   if (
-    page ===
-      "property-details" &&
+    page === "property-details" &&
     selectedPropertyId
   ) {
     return (
       <PublicPropertyDetails
-        propertyId={
-          selectedPropertyId
-        }
+        {...publicNavigation}
+        propertyId={selectedPropertyId}
         onBack={() =>
-          setPage(
+          goToPublicPage(
             "public-properties"
           )
         }
@@ -470,9 +490,7 @@ function App() {
   ) {
     return (
       <PublicProperties
-        onBack={() =>
-          setPage("home")
-        }
+        {...publicNavigation}
         onViewProperty={(
           propertyId
         ) => {
@@ -480,7 +498,7 @@ function App() {
             propertyId
           );
 
-          setPage(
+          goToPublicPage(
             "property-details"
           );
         }}
@@ -499,7 +517,7 @@ function App() {
     return (
       <Auth
         onBrowseProperties={() =>
-          setPage(
+          goToPublicPage(
             "public-properties"
           )
         }
@@ -514,14 +532,7 @@ function App() {
   if (!session) {
     return (
       <Home
-        onBrowseProperties={() =>
-          setPage(
-            "public-properties"
-          )
-        }
-        onStaffLogin={() =>
-          setPage("login")
-        }
+        {...publicNavigation}
         onViewProperty={(
           propertyId
         ) => {
@@ -529,19 +540,10 @@ function App() {
             propertyId
           );
 
-          setPage(
+          goToPublicPage(
             "property-details"
           );
         }}
-        onAbout={() =>
-          setPage("about")
-        }
-        onDevelopments={() =>
-          setPage("developments")
-        }
-        onContact={() =>
-          setPage("contact")
-        }
       />
     );
   }
@@ -603,6 +605,7 @@ function App() {
 
               setStaffVerified(null);
               setStaffRole(null);
+              clearPublicHash();
               setPage("home");
             }}
             className="mt-7 w-full rounded-xl bg-gradient-to-r from-[#f5a400] via-[#f97316] to-[#ef233c] px-6 py-3.5 font-bold text-white"

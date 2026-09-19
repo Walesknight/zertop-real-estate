@@ -6,7 +6,6 @@ import {
 } from "react";
 
 import {
-  ArrowLeft,
   Bath,
   BedDouble,
   Building2,
@@ -21,10 +20,17 @@ import {
 
 import { supabase } from "../lib/supabase";
 
-type PublicPropertyDetailsProps = {
-  propertyId: string;
-  onBack: () => void;
-};
+import PublicNavbar, {
+  type PublicNavigationProps,
+} from "../components/PublicNavbar";
+
+import PublicFooter from "../components/PublicFooter";
+
+type PublicPropertyDetailsProps =
+  PublicNavigationProps & {
+    propertyId: string;
+    onBack: () => void;
+  };
 
 type PropertyImage = {
   image_url: string;
@@ -67,6 +73,13 @@ const WHATSAPP_NUMBER = "2349058910187";
 export default function PublicPropertyDetails({
   propertyId,
   onBack,
+  onHome,
+  onProperties,
+  onDevelopments,
+  onWhyZertop,
+  onAbout,
+  onContact,
+  onStaffLogin,
 }: PublicPropertyDetailsProps) {
   const [property, setProperty] = useState<Property | null>(
     null
@@ -394,28 +407,16 @@ Please send me more information.
 
   return (
     <div className="min-h-screen bg-[#f8fafc] pb-24 text-[#0b1b35] lg:pb-0">
-      {/* HEADER */}
-      <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 shadow-sm backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 md:px-6">
-          <img
-            src="/zertop-logo.png"
-            alt="Zertop Limited"
-            className="h-12 w-auto object-contain md:h-14"
-          />
-
-          <button
-            type="button"
-            onClick={onBack}
-            className="flex items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm font-semibold text-[#0b1b35] transition hover:border-orange-300 hover:bg-orange-50"
-          >
-            <ArrowLeft size={17} />
-
-            <span className="hidden sm:inline">
-              Back to Properties
-            </span>
-          </button>
-        </div>
-      </header>
+      {/* SHARED NAVBAR */}
+      <PublicNavbar
+        onHome={onHome}
+        onProperties={onProperties}
+        onDevelopments={onDevelopments}
+        onWhyZertop={onWhyZertop}
+        onAbout={onAbout}
+        onContact={onContact}
+        onStaffLogin={onStaffLogin}
+      />
 
       {/* PROPERTY HEADING */}
       <section className="relative overflow-hidden border-b border-gray-200 bg-[#fffaf5]">
@@ -914,6 +915,16 @@ Please send me more information.
           </aside>
         </div>
       </main>
+
+      {/* SHARED HOME FOOTER */}
+      <PublicFooter
+        onHome={onHome}
+        onProperties={onProperties}
+        onDevelopments={onDevelopments}
+        onWhyZertop={onWhyZertop}
+        onAbout={onAbout}
+        onContact={onContact}
+      />
 
       {/* MOBILE CTA */}
       <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white/95 p-3 shadow-[0_-10px_30px_rgba(15,23,42,0.08)] backdrop-blur-xl lg:hidden">
